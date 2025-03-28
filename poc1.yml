@@ -1,0 +1,15 @@
+name: "Liquibase POC"
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  test-liquibase-action:
+    runs-on: self-hosted
+    name: Liquibase Status
+    steps:
+      - name: Liquibase status
+        id: run-liquibase-history
+        run:  |
+          liquibase --username="postgres" --defaultsFile="liquibase.properties" history
