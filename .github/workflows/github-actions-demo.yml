@@ -13,4 +13,4 @@ jobs:
         id: run-liquibase-history
         run:  |
           cd /home/wzhou/liquibase-test
-          liquibase --username="postgres" --defaults-file="liquibase.properties" history
+          liquibase --username="postgres" --defaults-file="liquibase.properties" history >>lq_status.out 
