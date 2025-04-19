@@ -48,4 +48,7 @@ jobs:
       - name: Liquibase command
         if: env.executeBuild == 'true'
         run: |
-          liquibase ${{ github.event.inputs.Liquibase_Command_Arguments }}"
+          echo ${{ GITHUB.WORKSPACE }}
+          cd /home/wzhou
+          echo pwd
+          liquibase ${{ github.event.inputs.Liquibase_Command_Arguments }}" 
