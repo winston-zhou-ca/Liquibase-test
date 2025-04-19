@@ -47,7 +47,6 @@ jobs:
       # Runs Liquibase command
       - name: Liquibase command
         run: |
-          echo ${{ GITHUB.WORKSPACE }}
-          cd /home/wzhou
-          echo pwd
+          echo "${{ GITHUB.WORKSPACE }}"
+          cd /home/wzhou/liquibase-test
           liquibase ${{ github.event.inputs.Liquibase_Command_Arguments }}
