@@ -1,0 +1,50 @@
+name: Liquibase Test Workflow 1
+ 
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "release" branch
+  #push:
+    #branches:
+      #- release
+      #- 'migrations/**'
+ 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      Liquibase_Command_Arguments:
+        description: 'Liquibase COmmand Arguments'
+        default: '--version'
+        # Input has to be provided for the workflow to run
+        required: true
+        type: string 
+env:
+ 
+  # Enable this for additional debug logging
+  ACTIONS_RUNNER_DEBUG: true 
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    name: Deploy Build
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+    environment: 'build' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
+    env:
+      stage: 'Build'
+      
+      # Environment Secrets - In Real Ensure all of the below have been created as an Environment Secret (Projects Settings > Secrets > Actions section, specially related to the environment in question) #
+      # stageName: ${{ vars.stage }}
+      # databaseName: ${{ vars.databaseName }}
+      # executeBuild: true
+      # publishArtifacts: true
+ 
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Runs Liquibase command
+      - name: Liquibase command
+        if: env.executeBuild == 'true'
+        run: |
+          liquibase ${{ github.event.inputs.Liquibase_Command_Arguments }}" 
+          
