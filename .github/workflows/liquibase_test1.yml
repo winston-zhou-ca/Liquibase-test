@@ -50,4 +50,4 @@ jobs:
           echo ${{ GITHUB.WORKSPACE }}
           cd /home/wzhou
           echo pwd
-          liquibase ${{ github.event.inputs.Liquibase_Command_Arguments }}" 
+          liquibase ${{ github.event.inputs.Liquibase_Command_Arguments }}
