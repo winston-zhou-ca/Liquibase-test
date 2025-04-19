@@ -46,7 +46,6 @@ jobs:
 
       # Runs Liquibase command
       - name: Liquibase command
-        if: env.executeBuild == 'true'
         run: |
           echo ${{ GITHUB.WORKSPACE }}
           cd /home/wzhou
