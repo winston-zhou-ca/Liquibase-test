@@ -1,0 +1,193 @@
+name: "Liquibase Admin Workflow to set up Liquibase User"
+
+ 
+
+on:
+
+  workflow_dispatch:
+
+    inputs:
+
+      environment:
+
+        required: true
+
+        default: 'Dev'
+
+        type: choice
+
+        options:
+
+          - Dev
+
+          - QA/UAT
+
+          - Prod
+
+      appcatid:
+
+        required: true
+
+        description: 'AppCat ID'
+
+        type: string
+
+      crnumber:
+
+        required: false
+
+        description: 'For PROD, enter the valid CR number, and CR state should be Implement. For non-prod env, this is optional'
+
+        type: string
+
+      database_type:
+
+        required: true
+
+        description: 'Database Engine Type'
+
+        type: choice
+
+        options:
+
+          - DB2
+
+          - MSSQL
+
+          - Oracle
+
+          - PostgreSQL
+
+      host:
+
+        required: true
+
+        description: 'FQDN of DB server name or VIP'
+
+        type: string
+
+      port:
+
+        required: true
+
+        description: 'DB port number'
+
+        type: string
+
+      dbname:
+
+        required: true
+
+        description: 'DB name'
+
+        type: string
+
+      adminuser:
+
+        required: true
+
+        description: 'Admin User ID'
+
+        type: string
+
+      adminpwd:
+
+        required: true
+
+        description: 'Password of Admin User'
+
+        type: string       
+
+jobs:
+
+  liquibase-admin:
+
+    name: Liquibase Admin Workflow
+
+    runs-on: [self-hosted,linux,x64]
+
+    # set environment for production deployments to require CloudEng approval
+
+    environment: "${{ (inputs.stage == 'prd' || inputs.stage == 'prod' || inputs.stage == 'prprd' || inputs.stage == 'mlprd' ) && 'cloud-eng-approval' || 'undefined' }}"
+
+    steps:
+
+      - name: ⚙️ Set env variables
+
+        run: |
+
+          echo "Environment=${{ inputs.environment }}" >> $GITHUB_ENV
+
+          echo "appcatID=${{ inputs.appcatid }}" >> $GITHUB_ENV
+
+          echo "crNumber=${{ inputs.crnumber }}" >> $GITHUB_ENV
+
+          echo "databaseType=${{ inputs.database_type }}" >> $GITHUB_ENV
+
+          echo "Host=${{ inputs.host }}" >> $GITHUB_ENV
+
+          echo "Port=${{ inputs.port }}" >> $GITHUB_ENV
+
+          echo "dbName=${{ inputs.dbname }}" >> $GITHUB_ENV
+
+          echo "adminUser=${{ inputs.adminuser }}" >> $GITHUB_ENV
+
+          echo "adminPWD=${{ inputs.adminpwd }}" >> $GITHUB_ENV
+
+          echo "repoName=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}" >> $GITHUB_ENV
+
+ 
+
+      - name: ⚙️ Checkout code from user specified branch
+
+        uses: BMO-Sandbox/actions-checkout@v4.1.1
+
+        with:
+
+          ref: ${{ inputs.branchName != '' && inputs.branchName || 'master' }}
+
+ 
+
+      - name: 🚀Setup files, create secrets and run liquibase update command🚀
+
+        run: |
+
+          export STAGE=${{env.Environment}}
+
+          export APPCATID=${{env.appcatID}}
+
+          export CR=${{env.crNumber}}
+
+          export DBTYPE=${{env.databaseType}}         
+
+          export HOST=${{env.Host}}
+
+          export PORT=${{env.Port}}
+
+          export DBNAME=${{env.dbName}}
+
+          export ADMINID=${{env.adminUser}}
+
+          export ADMINPWD=${{env.adminPWD}}          
+
+ 
+
+          # Create project folders if not existing
+
+          mkdir -p /liquibase/projects/$APPCATID/$STAGE/$DBTYPE/$DBNAME
+
+      
+
+          # Copy Liquibase property and changelog template files
+
+          cd /liquibase/projects/$APPCATID/$STAGE/$DBTYPE/$DBNAME
+
+          cp -a configurations/liquibase.property . && cp -a configurations/changelog* .
+
+          ls -la
+
+          # Modify Liquibase property file
+
+          sed -i "s/liquibase.command.username:.*/liquibase.command.username: $ADMINID/g" liquibase.properties     
+
+          sed -i "s/liquibase.command.password:.*/liquibase.command.password: $ADMINPWD/g" liquibase.properties  
