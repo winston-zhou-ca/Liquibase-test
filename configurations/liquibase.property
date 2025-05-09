@@ -1,0 +1,4 @@
+url: jdbc:postgresql://localhost:5432/sampledb
+liquibase.command.username: 
+liquibase.command.password: 
+changeLogFile: changelog.sql
