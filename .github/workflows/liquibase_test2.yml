@@ -140,7 +140,7 @@ jobs:
 
       - name: ⚙️ Checkout code from user specified branch
 
-        uses: actions-checkout@v4.1.1
+        uses: actions/checkout@v4.1.1
 
         with:
 
