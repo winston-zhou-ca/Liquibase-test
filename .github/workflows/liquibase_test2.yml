@@ -174,7 +174,7 @@ jobs:
 
           # Create project folders if not existing
 
-          mkdir -p /liquibase/projects/$APPCATID/$STAGE/$DBTYPE/$DBNAME
+          mkdir -p /home/wzhou/liquibase-test/projects/$APPCATID/$STAGE/$DBTYPE/$DBNAME
 
       
 
