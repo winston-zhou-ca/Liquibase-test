@@ -178,16 +178,16 @@ jobs:
 
       
 
-          # # Copy Liquibase property and changelog template files
+          # Copy Liquibase property and changelog template files
 
-          # cd /liquibase/projects/$APPCATID/$STAGE/$DBTYPE/$DBNAME
+          cd /home/wzhou/liquibase-test/projects/$APPCATID/$STAGE/$DBTYPE/$DBNAME
 
-          # cp -a configurations/liquibase.property . && cp -a configurations/changelog* .
+          cp -a configurations/liquibase.properties . && cp -a configurations/changelog* .
 
-          # ls -la
+          ls -la
 
-          # # Modify Liquibase property file
+          # Modify Liquibase property file
 
-          # sed -i "s/liquibase.command.username:.*/liquibase.command.username: $ADMINID/g" liquibase.properties     
+          sed -i "s/liquibase.command.username:.*/liquibase.command.username: $ADMINID/g" liquibase.properties     
 
-          # sed -i "s/liquibase.command.password:.*/liquibase.command.password: $ADMINPWD/g" liquibase.properties  
+          sed -i "s/liquibase.command.password:.*/liquibase.command.password: $ADMINPWD/g" liquibase.properties  
