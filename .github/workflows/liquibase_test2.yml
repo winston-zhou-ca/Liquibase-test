@@ -182,7 +182,10 @@ jobs:
 
           cd /home/wzhou/liquibase-test/projects/$APPCATID/$STAGE/$DBTYPE/$DBNAME
 
-          cp -a configurations/liquibase.properties . && cp -a configurations/changelog* .
+          echo `pwd`
+          echo "${{ GITHUB.WORKSPACE }}"
+
+          cp -a ${{ GITHUB.WORKSPACE }}/configurations/liquibase.properties . && cp -a ${{ GITHUB.WORKSPACE }}/configurations/changelog* .
 
           ls -la
 
