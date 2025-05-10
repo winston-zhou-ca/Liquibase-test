@@ -144,7 +144,7 @@ jobs:
 
         with:
 
-          ref: ${{ inputs.branchName != '' && inputs.branchName || 'master' }}
+          ref: ${{ inputs.branchName != '' && inputs.branchName || 'main' }}
 
  
 
